@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <title>Ethernet Switch Settings</title>
+    <meta charset="utf-8" />
+    <script src="../js/sdpi-components.js"></script>
+</head>
+
+<body>
+    <!--
+        Learn more about property inspector components at https://sdpi-components.dev/docs/components
+    -->
+    <sdpi-item label="Interface Name">
+        <sdpi-textfield setting="INTERFACE_NAME" default="Ethernet"></sdpi-textfield>
+    </sdpi-item>
+    <sdpi-item label="Wi-Fi Profile Name">
+        <sdpi-textfield setting="WIFI_PROFILE_NAME" default="DESU!!!"></sdpi-textfield>
+    </sdpi-item>
+    <sdpi-item label="Poll Interval">
+        <sdpi-range setting="POLL_INTERVAL_MS" min="1000" max="60000" step="100" default="2000" showlabels></sdpi-range>
+    </sdpi-item>
+    <sdpi-item label="Max Wait Time">
+        <sdpi-range setting="MAX_WAIT_MS" min="1000" max="60000" step="100" default="30000" showlabels></sdpi-range>
+    </sdpi-item>
+</body>
+
+</html>

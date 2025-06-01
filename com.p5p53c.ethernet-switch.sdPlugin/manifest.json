@@ -1,0 +1,47 @@
+{
+	"Name": "Ethernet Switch",
+	"Version": "0.1.0.0",
+	"Author": "Pearson Cheung",
+	"Actions": [
+		{
+			"Name": "Ethernet Switch",
+			"UUID": "com.p5p53c.ethernet-switch.switch",
+			"Icon": "imgs/actions/counter/icon",
+			"Tooltip": "Switch between Wi-Fi and Ethernet in one click",
+			"PropertyInspectorPath": "ui/ethernet_switch.html",
+			"Controllers": [
+				"Keypad"
+			],
+			"States": [
+				{
+					"Image": "imgs/actions/counter/key",
+					"TitleAlignment": "middle"
+				}
+			]
+		}
+	],
+	"Category": "Ethernet Switch",
+	"CategoryIcon": "imgs/plugin/category-icon",
+	"CodePath": "bin/plugin.js",
+	"Description": "Switch between Wi-Fi and Ethernet in one click",
+	"Icon": "imgs/plugin/marketplace",
+	"SDKVersion": 2,
+	"Software": {
+		"MinimumVersion": "6.5"
+	},
+	"OS": [
+		{
+			"Platform": "mac",
+			"MinimumVersion": "12"
+		},
+		{
+			"Platform": "windows",
+			"MinimumVersion": "10"
+		}
+	],
+	"Nodejs": {
+		"Version": "20",
+		"Debug": "enabled"
+	},
+	"UUID": "com.p5p53c.ethernet-switch"
+}
