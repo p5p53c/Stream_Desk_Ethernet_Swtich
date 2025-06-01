@@ -12,14 +12,13 @@
 import { exec } from 'child_process';
 import * as util from 'util';
 import * as wifi from 'node-wifi';
-import * as WmiClient from 'wmi-client';
+import { Network } from 'node-windows';
 
 // Type declarations for modules without TypeScript definitions
 declare module 'node-wifi';
-declare module 'wmi-client';
+declare module 'node-windows';
 
 const execAsync = util.promisify(exec);
-const wmi = new WmiClient();
 
 // Initialize wifi
 wifi.init({
@@ -27,22 +26,21 @@ wifi.init({
 });
 
 /**
- * Gets the administrative state of a network interface using WMI
+ * Gets the administrative state of a network interface
  */
 export async function getInterfaceState(interfaceName: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        wmi.query('SELECT NetEnabled FROM Win32_NetworkAdapter WHERE NetConnectionID = ?', [interfaceName], (err: any, result: any) => {
-            if (err) {
-                reject(new Error(`Failed to get interface state: ${err.message}`));
-                return;
-            }
-            if (!result || result.length === 0) {
-                reject(new Error(`Interface "${interfaceName}" not found`));
-                return;
-            }
-            resolve(result[0].NetEnabled ? 'Enabled' : 'Disabled');
-        });
-    });
+    try {
+        const networkInterface = await Network.getInterface(interfaceName);
+        if (!networkInterface) {
+            throw new Error(`Interface "${interfaceName}" not found`);
+        }
+        return networkInterface.enabled ? 'Enabled' : 'Disabled';
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to get interface state: ${error.message}`);
+        }
+        throw new Error('Failed to get interface state: Unknown error');
+    }
 }
 
 /**
@@ -74,57 +72,41 @@ export async function isWifiConnected(): Promise<boolean> {
 }
 
 /**
- * Disables a network interface using WMI
+ * Disables a network interface
  */
 export async function disableInterface(interfaceName: string): Promise<void> {
     console.log(`Disabling interface "${interfaceName}"...`);
-    return new Promise((resolve, reject) => {
-        wmi.query('SELECT * FROM Win32_NetworkAdapter WHERE NetConnectionID = ?', [interfaceName], (err: any, result: any) => {
-            if (err) {
-                reject(new Error(`Failed to disable interface: ${err.message}`));
-                return;
-            }
-            if (!result || result.length === 0) {
-                reject(new Error(`Interface "${interfaceName}" not found`));
-                return;
-            }
-            const adapter = result[0];
-            adapter.Disable((err: any) => {
-                if (err) {
-                    reject(new Error(`Failed to disable interface: ${err.message}`));
-                    return;
-                }
-                resolve();
-            });
-        });
-    });
+    try {
+        const networkInterface = await Network.getInterface(interfaceName);
+        if (!networkInterface) {
+            throw new Error(`Interface "${interfaceName}" not found`);
+        }
+        await networkInterface.disable();
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to disable interface: ${error.message}`);
+        }
+        throw new Error('Failed to disable interface: Unknown error');
+    }
 }
 
 /**
- * Enables a network interface using WMI
+ * Enables a network interface
  */
 export async function enableInterface(interfaceName: string): Promise<void> {
     console.log(`Enabling interface "${interfaceName}"...`);
-    return new Promise((resolve, reject) => {
-        wmi.query('SELECT * FROM Win32_NetworkAdapter WHERE NetConnectionID = ?', [interfaceName], (err: any, result: any) => {
-            if (err) {
-                reject(new Error(`Failed to enable interface: ${err.message}`));
-                return;
-            }
-            if (!result || result.length === 0) {
-                reject(new Error(`Interface "${interfaceName}" not found`));
-                return;
-            }
-            const adapter = result[0];
-            adapter.Enable((err: any) => {
-                if (err) {
-                    reject(new Error(`Failed to enable interface: ${err.message}`));
-                    return;
-                }
-                resolve();
-            });
-        });
-    });
+    try {
+        const networkInterface = await Network.getInterface(interfaceName);
+        if (!networkInterface) {
+            throw new Error(`Interface "${interfaceName}" not found`);
+        }
+        await networkInterface.enable();
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(`Failed to enable interface: ${error.message}`);
+        }
+        throw new Error('Failed to enable interface: Unknown error');
+    }
 }
 
 /**

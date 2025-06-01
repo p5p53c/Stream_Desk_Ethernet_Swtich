@@ -24,10 +24,16 @@ declare module 'node-wifi' {
     export function getCurrentConnections(): Promise<WifiConnection[]>;
 }
 
-declare module 'wmi-client' {
-    class WmiClient {
-        constructor();
-        query(query: string, params: any[], callback: (err: any, result: any) => void): void;
+declare module 'node-windows' {
+    interface NetworkInterface {
+        name: string;
+        enabled: boolean;
+        enable(): Promise<void>;
+        disable(): Promise<void>;
     }
-    export = WmiClient;
+
+    export class Network {
+        static getInterfaces(): Promise<NetworkInterface[]>;
+        static getInterface(name: string): Promise<NetworkInterface | null>;
+    }
 } 

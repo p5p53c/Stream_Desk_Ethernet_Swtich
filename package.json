@@ -18,8 +18,7 @@
     },
     "dependencies": {
         "@elgato/streamdeck": "^1.0.0",
-        "ife": "^0.0.10",
         "node-wifi": "^2.0.16",
-        "wmi-client": "^0.5.0"
+        "node-windows": "^1.0.0-beta.8"
     }
 }
